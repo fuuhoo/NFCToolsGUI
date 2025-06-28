@@ -93,3 +93,31 @@ dumpfiles/
 keys.txt
 *.mfd
 
+
+# CMake generated files
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+*.cmake
+ 
+# Binaries and other build artifacts
+bin/
+lib/
+*.o
+*.so
+*.dylib
+*.a
+*.dll
+*.exe
+ 
+# External build systems
+build/
+source/libusb-win32-bin-1.2.7.3/*
+libnfc.conf
+source/libusb-win32.zip
+source/nfc-mfdict
+source/nfc-mflock
+source/libnfc_collect
+source/libnfc
+nonces.bin
+source/cropto1_bs

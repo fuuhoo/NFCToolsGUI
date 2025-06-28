@@ -23,6 +23,7 @@ esac
 # install msys2 dependency
 if [ "$os" = "MINGW64" ]; then
     echo "============================== install msys dependency =============================="
+    pacman -S --noconfirm mingw-w64-x86_64-toolchain
     pacman -S --noconfirm unzip
     pacman -S --noconfirm mingw-w64-x86_64-crt-git
     pacman -S --noconfirm mingw-w64-x86_64-gcc
@@ -83,7 +84,7 @@ if [ "$os" = "MINGW64" ]; then
     LIBNFC_DRIVER_PN53X_USB=OFF
     LIBUSB_INCLUDE_DIRS=$prefix/include
     LIBUSB_LIBRARIES=$prefix/lib/gcc/libusb.a
-    cmake -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX="$CMAKE_INSTALL_PREFIX" -DLIBUSB_INCLUDE_DIRS="$LIBUSB_INCLUDE_DIRS" -DLIBUSB_LIBRARIES="$LIBUSB_LIBRARIES" -DLIBNFC_DRIVER_ACR122S="$LIBNFC_DRIVER_ACR122S" -DLIBNFC_DRIVER_ACR122_USB="$LIBNFC_DRIVER_ACR122_USB" -DLIBNFC_DRIVER_ARYGON=$LIBNFC_DRIVER_ARYGON -DLIBNFC_DRIVER_PN53X_USB=$LIBNFC_DRIVER_PN53X_USB
+    cmake -G "MinGW Makefiles" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX="$CMAKE_INSTALL_PREFIX" -DLIBUSB_INCLUDE_DIRS="$LIBUSB_INCLUDE_DIRS" -DLIBUSB_LIBRARIES="$LIBUSB_LIBRARIES" -DLIBNFC_DRIVER_ACR122S="$LIBNFC_DRIVER_ACR122S" -DLIBNFC_DRIVER_ACR122_USB="$LIBNFC_DRIVER_ACR122_USB" -DLIBNFC_DRIVER_ARYGON=$LIBNFC_DRIVER_ARYGON -DLIBNFC_DRIVER_PN53X_USB=$LIBNFC_DRIVER_PN53X_USB
     mingw32-make install
     cp ./libnfc/libnfc.dll.a "$prefix"/lib/libnfc.a
     cp ./contrib/win32/err.h "$prefix"/include
