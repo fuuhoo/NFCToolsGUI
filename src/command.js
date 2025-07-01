@@ -31,7 +31,7 @@ const {
   sentToDumpHistoryWindow,
 } = require("./windows");
 
-const userDataPath = app.getPath('userData')
+const userDataPath = app.getPath("userData");
 
 // const userDataPath = app.getAppPath() + "/temp/";
 
@@ -112,10 +112,12 @@ const actions = {
 
   // 一键写卡
   "write-IC": () => {
+    let defaultP=dumpFilesPath
+    
     dialog
       .showOpenDialog({
         title: i18n("dialog_title_choose_dump_need_to_write"),
-        defaultPath: dumpFilesPath,
+        defaultPath: defaultP,
         buttonLabel: i18n("dialog_button_open"),
         filters: [
           { name: i18n("file_type_dump"), extensions: ["dump", "mfd"] },
@@ -124,8 +126,8 @@ const actions = {
       .then((result) => {
         if (result["canceled"] === true) return;
         let mfdFilePath = result["filePaths"][0];
-        dumpFilesPath=mfdFilePath
-        if ( !fs.existsSync(tempMFDFilePath)) {
+        defaultP = mfdFilePath;
+        if (!fs.existsSync(tempMFDFilePath)) {
           fs.writeFileSync(tempMFDFilePath, "");
         }
 
@@ -669,8 +671,6 @@ function readICThenExec(
   processHandler,
   finishHandler
 ) {
-
-
   let isCmdFunc = true;
   if (arguments.length === 4) isCmdFunc = false;
   checkKeyFileExist();
@@ -719,6 +719,7 @@ function readICThenExec(
 }
 
 // 执行MFOC解密
+//一键解卡
 function mfoc(args) {
   let cardID = null;
   newKeys = [];
@@ -731,7 +732,6 @@ function mfoc(args) {
     args,
     (value) => {
       keyInfoStatistic(value);
-
       let i = value.indexOf("UID (NFCID1):");
       if (i >= 0) {
         i += 14;
@@ -746,13 +746,33 @@ function mfoc(args) {
         });
       } else {
         fs.mkdir(dumpsFolder, () => {
-          fs.rename(
-            tempMFDFilePath,
-            `${dumpFilesPath}/${cardID}_${getTimeList().join("_")}.mfd`,
-            (err) => {
-              if (err) throw err;
-            }
-          );
+          // 目标路径
+          const targetPath = `${dumpFilesPath}\\${cardID}_${getTimeList().join(
+            "_"
+          )}.mfd`;
+          const fse = require("fs-extra");
+          const path = require("path");
+          const targetDir = path.dirname(targetPath);
+          console.log("tempMFDFilePath", tempMFDFilePath);
+          console.log("targetPath", targetPath);
+          console.log("dumpsFolder", dumpsFolder);
+          fse
+            .ensureDir(targetDir)
+            .then(() => fse.move(tempMFDFilePath, targetPath))
+            .then(() => console.log("文件移动成功"))
+            .catch((err) => {
+              console.error("文件操作失败:", err);
+              // 这里可以添加错误恢复或通知逻辑
+            });
+
+          // fs.rename(
+          //   tempMFDFilePath,
+          //   `${dumpFilesPath}/${cardID}_${getTimeList().join("_")}.mfd`,
+          //   (err) => {
+          //     if (err) throw err;
+          //   }
+          // );
+
           cardID = null;
         });
       }
