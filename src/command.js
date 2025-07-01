@@ -125,21 +125,14 @@ const actions = {
         if (result["canceled"] === true) return;
         let mfdFilePath = result["filePaths"][0];
         dumpFilesPath=mfdFilePath
+        if ( !fs.existsSync(tempMFDFilePath)) {
+          fs.writeFileSync(tempMFDFilePath, "");
+        }
 
-        //写入非0块
         readICThenExec(
           i18n("log_msg_start_write_card"),
           i18n("indicator_writing_ic_card"),
           true,
-          "nfc-mfclassic",
-          ["w", "A", "u", mfdFilePath, tempMFDFilePath, "f"]
-        );
-
-        //写入0块
-        readICThenExec(
-          i18n("log_msg_start_write_card"),
-          i18n("indicator_writing_ic_card"),
-          false,
           "nfc-mfclassic",
           ["W", "A", "u", mfdFilePath, tempMFDFilePath, "f"]
         );
@@ -676,6 +669,8 @@ function readICThenExec(
   processHandler,
   finishHandler
 ) {
+
+
   let isCmdFunc = true;
   if (arguments.length === 4) isCmdFunc = false;
   checkKeyFileExist();
