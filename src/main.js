@@ -6,9 +6,9 @@ const path = require("path");
 const buildInfo = require('./buildInfo.json');
 const i18n = require('./i18n');
 
-// process.env['LIBNFC_SYSCONFDIR'] = app.getPath('userData')
+process.env['LIBNFC_SYSCONFDIR'] = app.getPath('userData')
 
-process.env['LIBNFC_SYSCONFDIR'] = app.getAppPath()+"/temp/"
+// process.env['LIBNFC_SYSCONFDIR'] = app.getAppPath()+"/temp/"
 
 
 Menu.setApplicationMenu(null)

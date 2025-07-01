@@ -121,3 +121,4 @@ source/libnfc_collect
 source/libnfc
 nonces.bin
 source/cropto1_bs
+temp/
