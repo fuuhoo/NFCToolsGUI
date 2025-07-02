@@ -42,13 +42,16 @@ const userDataPath = app.getPath("userData");
 
 const knownKeysFile = path.join(userDataPath, "./keys.txt");
 const tempMFDFilePath = path.join(userDataPath, "./temp.mfd");
-let dumpFilesPath = path.join(userDataPath, "./dumpfiles");
+const dumpFilesPath = path.join(userDataPath, "./dumpfiles");
 const noncesFilesPath = path.join(userDataPath, "./nonces.bin");
 const nfcConfigFilePath = path.join(userDataPath, "./libnfc.conf");
 let dictPath = app.isPackaged
   ? path.join(process.resourcesPath, "./dict.dic")
   : path.join(__dirname, "../dict.dic");
 const dumpsFolder = path.join(userDataPath, "./dumpfiles");
+
+
+let defaultFolder=dumpFilesPath
 
 let newKeys = [];
 let knownKeyInfo = [];
@@ -112,12 +115,11 @@ const actions = {
 
   // 一键写卡
   "write-IC": () => {
-    let defaultP=dumpFilesPath
     
     dialog
       .showOpenDialog({
         title: i18n("dialog_title_choose_dump_need_to_write"),
-        defaultPath: defaultP,
+        defaultPath: defaultFolder,
         buttonLabel: i18n("dialog_button_open"),
         filters: [
           { name: i18n("file_type_dump"), extensions: ["dump", "mfd"] },
@@ -126,7 +128,7 @@ const actions = {
       .then((result) => {
         if (result["canceled"] === true) return;
         let mfdFilePath = result["filePaths"][0];
-        defaultP = mfdFilePath;
+        defaultFolder = mfdFilePath;
         if (!fs.existsSync(tempMFDFilePath)) {
           fs.writeFileSync(tempMFDFilePath, "");
         }
